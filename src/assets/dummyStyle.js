@@ -1,5 +1,6 @@
 export const navbarStyles = { 
   //Logo text style
+  logo:"h-10 w-10 rounded-full object-contain bg-white p-1 shadow-md ring-1 ring-gray-200 transition-all duration-300 hover:shadow-lg hover:scale-105",
    text:"mt-1 bg-gray-200 text-gray-700 px-6 py-2 rounded-full shadow-[6px_6px_12px_#bebebe,-6px_-6px_12px_#ffffff] transition-all duration-300 hover:shadow-[inset_6px_6px_12px_#bebebe,inset_-6px_-6px_12px_#ffffff]" ,
   // Main nav container
   nav: "w-full bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 shadow-2xl py-3 sm:py-4 px-4 sm:px-6 lg:px-10 relative overflow-visible",
