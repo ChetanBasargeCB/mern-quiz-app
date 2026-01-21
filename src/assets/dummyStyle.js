@@ -1,6 +1,7 @@
 export const navbarStyles = { 
   //Logo text style
-  logo:"h-10 w-10 rounded-full object-contain bg-white p-1 shadow-md ring-1 ring-gray-200 transition-all duration-300 hover:shadow-lg hover:scale-105",
+  textlogo:"hidden md:block text-xl font-extrabold tracking-wider text-white px-6 py-2 rounded-lg  bg-linear-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-md",
+  logo:"h-18 w-15 hover:cursor-pointer hover:border-2 border-purple-600 shadow-lg transition-transform hover:scale-105 rounded-full md:h-14 lg:h-16 object-contain",
    text:"mt-1 bg-gray-200 text-gray-700 px-6 py-2 rounded-full shadow-[6px_6px_12px_#bebebe,-6px_-6px_12px_#ffffff] transition-all duration-300 hover:shadow-[inset_6px_6px_12px_#bebebe,inset_-6px_-6px_12px_#ffffff]" ,
   // Main nav container
   nav: "w-full bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 shadow-2xl py-3 sm:py-4 px-4 sm:px-6 lg:px-10 relative overflow-visible",
@@ -120,8 +121,8 @@ export const loginStyles = {
   passwordToggleIcon: "w-4 h-4 sm:w-5 sm:h-5",
   
   // Error messages
-  errorText: "mt-2 text-xs text-red-600",
-  submitError: "text-sm text-red-600 mb-3",
+  errorText: "text-red-500 text-sm text-center animate-pulse",
+  submitError: "text-red-500 text-sm text-center animate-pulse ",
   
   // Buttons container
   buttonsContainer: "mt-4 grid gap-3",

@@ -64,6 +64,7 @@ export async function Register(req, res) {
         token,
         user: { id: user._id.toString(), name: user.name, email: user.email },
       });
+      console.log("acoount crated")
   } catch (error) {
     console.error("Register eroor ", error);
 
@@ -83,7 +84,7 @@ export async function Login(req, res) {
     }
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ message: "Invalid email" });
+      return res.status(401).json({ message: "Invalid or email" });
     }
     // password comparison
     const isMatch = await bcrypt.compare(password, user.password);
