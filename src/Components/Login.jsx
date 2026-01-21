@@ -5,37 +5,25 @@ import { FaArrowLeftLong } from "react-icons/fa6";
 import { motion } from "framer-motion";
 import login from "../assets/login.avif";
 import { loginStyles } from "../assets/dummyStyle";
+import toast, { Toaster } from "react-hot-toast";
 
-const isValidEmail = (email) =>
-  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
 
 export default function Login() {
   const [showPass, setShowPass] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState({});
   const [loading, setLoading] = useState(false);
-  const [submiterror, setSubmiterror] = useState("");
 
   const navigate = useNavigate();
   const BackendAPI = "http://localhost:3000";
 
-  const validate = () => {
-    const e = {};
-    if (!email) e.email = "Email is required";
-    else if (!isValidEmail(email)) e.email = "Enter valid email";
-    if (!password) e.password = "Password is required";
-    return e;
-  };
+
 
   const handelSubmit = async (e) => {
     e.preventDefault();
-    setSubmiterror("");
-
-    const validation = validate();
-    setError(validation);
-    if (Object.keys(validation).length) return;
-
+    if(!email) return toast.error("Email is required")
+    if (!password) return toast.error("Password is required")
     setLoading(true);
 
     try {
@@ -43,7 +31,6 @@ export default function Login() {
         email: email.trim().toLowerCase(),
         password,
       };
-
       const resp = await fetch(`${BackendAPI}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -53,7 +40,7 @@ export default function Login() {
       const data = await resp.json();
 
       if (!resp.ok) {
-        setSubmiterror(data.message || "Login failed");
+        toast.error(data.message || "Login failed")
         return;
       }
 
@@ -66,7 +53,8 @@ export default function Login() {
 
       navigate("/", { replace: true });
     } catch {
-      setSubmiterror("Network error");
+      toast.loading("Network error")
+
     } finally {
       setLoading(false);
     }
@@ -74,7 +62,7 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
-      
+      <Toaster/>
       {/* Attached Card */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
@@ -107,9 +95,7 @@ export default function Login() {
                 placeholder="your@email.com"
                 className="w-full border rounded-md px-3 py-2 focus:ring-2 focus:ring-blue-400 outline-none"
               />
-              {error.email && (
-                <p className={loginStyles.errorText}>{error.email}</p>
-              )}
+             
             </div>
 
             <div>
@@ -129,15 +115,8 @@ export default function Login() {
                   {showPass ? <FiEyeOff /> : <FiEye />}
                 </span>
               </div>
-              {error.password && (
-                <p className={loginStyles.errorText}>{error.password}</p>
-              )}
+             
             </div>
-
-            {submiterror && (
-              <p className={loginStyles.submitError}>{submiterror}</p>
-            )}
-
             <button
               disabled={loading}
               className="w-full bg-blue-600 hover:bg-blue-700 transition text-white py-2 rounded-md font-semibold"

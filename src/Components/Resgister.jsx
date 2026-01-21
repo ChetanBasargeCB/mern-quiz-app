@@ -3,27 +3,25 @@ import { motion } from "framer-motion";
 import register from "../assets/register.png";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function Register() {
   const [showPass, setShowPass] = useState(false);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [errors, setErrors] = useState({});
   const [password, setPassword] = useState("");
-  const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
   const BackendAPI = "http://localhost:3000";
 
   const handelSubmit = async (e) => {
     e.preventDefault();
-    setSuccess("");
     // Input validations
     if (!name || !email || !password) {
-      return setErrors({ field: "All fields require!" });
+      return toast.error("All fields are required");
     }
     if (password.length < 6) {
-      return setErrors({ password: "Password Must be 6 characters" });
+      return toast.error( "Password Must be 6 characters")
     }
     const userdata = {
       name,
@@ -35,7 +33,7 @@ export default function Register() {
         `${BackendAPI}/api/auth/register/`,
         userdata,
       );
-      setSuccess(resp.data.message)
+      toast.success(resp.data.message)
       // console.log(resp)
 
       setTimeout(() => navigate("/login"), 1700);
@@ -51,6 +49,7 @@ export default function Register() {
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
+      <Toaster/>
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         animate={{ opacity: 1, y: 0 }}
@@ -122,19 +121,7 @@ export default function Register() {
               <span>Show Password</span>
             </div>
             <div>
-              {/* Error Message */}
-              {(errors.field || errors.password) && (
-                <p className="text-red-500 text-sm text-center animate-pulse">
-                  {errors.field || errors.password}
-                </p>
-              )}
-
-              {/* Success Message */}
-              {success && (
-                <p className="text-green-600 text-sm text-center font-semibold">
-                  {success}
-                </p>
-              )}
+             
             </div>
             <button
               type="submit"
