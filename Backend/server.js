@@ -1,27 +1,29 @@
-import express from 'express'
-import cors from 'cors'
-import dotenv from 'dotenv'
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
 import { ConnectDB } from './config/db.js';
 import userRouter from './Routes/userRoutes.js';
-import resultRouter from './Routes/resultRoutes.js';
+import quizRouter from './Routes/quizRoutes.js';
+
 dotenv.config();
 
-const app = express()
-const PORT = process.env.PORT;
+const app = express();
+const PORT = process.env.PORT || 3000;
 
-// Middelware 
-app.use(cors())
-app.use(express.json())
-app.use(express.urlencoded({extended:true}));
+// Middleware 
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-//DB
- ConnectDB()
+// DB Connection
+ConnectDB();
 
-//Routes (Protected)
-app.use("/api/auth",userRouter)
-app.use("/api/result",resultRouter)
-app.get("/",(req,res)=>{
-    res.send("Home")
-})
+// Routes
+app.use("/api/auth", userRouter);
+app.use("/api/auth/quiz", quizRouter); // Prefix for all quiz actions
 
-app.listen(PORT,()=>console.log(` Server Started at  http://localhost:${PORT}`))
+app.get("/", (req, res) => {
+    res.send("Server is running...");
+});
+
+app.listen(PORT, () => console.log(`Server Started at http://localhost:${PORT}`));
