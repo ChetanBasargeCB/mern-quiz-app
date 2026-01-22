@@ -227,7 +227,7 @@ export const sidebarStyles = {
   sidebarContent: "sidebar-content flex-1 overflow-y-auto p-4",
   technologiesHeader: "mb-4 flex items-center justify-between",
   technologiesTitle: "text-lg font-semibold text-slate-700",
-  technologiesCount: "text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full",
+  technologiesCount: "text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full hover:bg-blue-300",
   
   // Technology items
   techItem: "mb-3",

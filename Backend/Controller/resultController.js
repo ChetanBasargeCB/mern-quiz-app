@@ -17,7 +17,7 @@ export async function createResult(req, res) {
       totalQuestions === undefined ||
       correct === undefined
     ) {
-      res.status(400).json({ message: "Missing fields" });
+      res.status(400).json({success:false, message: "Missing fields" });
     }
     // compute wrong if not provided
     const computedWrong =
@@ -41,10 +41,10 @@ export async function createResult(req, res) {
     const created = await Result.create(payload);
     return res
       .status(201)
-      .json({ message: "Result Saved !!", result: created });
+      .json({ success:true, message: "Result Saved !!", result: created });
   } catch (err) {
     console.error("Create Result error", err);
-    return res.status(500).json({ message: "server error" });
+    return res.status(500).json({ success:true, message: "server error" });
   }
 }
 

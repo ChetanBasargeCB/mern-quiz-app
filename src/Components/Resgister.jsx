@@ -38,9 +38,7 @@ export default function Register() {
 
       setTimeout(() => navigate("/login"), 1700);
     } catch (err) {
-      setErrors({
-        field: err.response?.data?.message || "Registration failed",
-      });
+      toast.error("Registration failed")
     }
     setName("");
     setEmail("");
@@ -78,6 +76,8 @@ export default function Register() {
           <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
             Create Account
           </h2>
+          <p className="mb-2 text-gray-600 text-center">Sign up to start using AI Powerd <span className="font-bold text-blue-400 hover:scale-105 animate-pulse"> Quiz App</span> — 
+            light UI, smooth micro-interactions.</p>
           <form className="flex flex-col gap-4" onSubmit={handelSubmit}>
             <div>
               <label className="text-sm text-gray-600">Full Name</label>
@@ -139,6 +139,9 @@ export default function Register() {
                   Login
                 </Link>
               </p>
+            </div>
+            <div className="text-center ">
+            <Link to='/login' className="border-2 border-gray-300 p-1 px-4 hover:bg-blue-600 rounded-xs ">Back</Link> 
             </div>
           </form>
         </motion.div>

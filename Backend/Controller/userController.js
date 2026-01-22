@@ -64,7 +64,6 @@ export async function Register(req, res) {
         token,
         user: { id: user._id.toString(), name: user.name, email: user.email },
       });
-      console.log("acoount crated")
   } catch (error) {
     console.error("Register eroor ", error);
 
@@ -100,7 +99,7 @@ export async function Login(req, res) {
       .status(201)
       .json({
         success: true,
-        message: "Login  Successfully!!",
+        message: "Login Successfully!!",
         token,
         user: { id: user._id.toString(), name: user.name, email: user.email },
       });

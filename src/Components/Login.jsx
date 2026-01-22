@@ -43,15 +43,16 @@ export default function Login() {
         toast.error(data.message || "Login failed")
         return;
       }
-
+      
       localStorage.setItem("authtoken", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
 
       window.dispatchEvent(
         new CustomEvent("authchanged", { detail: { user: data.user } })
       );
+       toast.success(data.message || "Login successful");
+      setTimeout(() =>{ navigate("/", { replace: true });}, 1000);
 
-      navigate("/", { replace: true });
     } catch {
       toast.loading("Network error")
 
