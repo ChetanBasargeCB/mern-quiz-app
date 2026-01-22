@@ -20,13 +20,11 @@ import {
   Zap,
   Menu,
   XCircle,
-  CheckCircle,
-  BrainCircuit,
-  ZapIcon,
-  MousePointer2
+  CheckCircle
 } from "lucide-react";
 import toast from "react-hot-toast";
 import questionsData from '../assets/dummyData';
+import HeroSection from "./HeroSection";
 
 export default function Sidebar() {
   const [selectedTech, setSelectedTech] = useState(null);
@@ -51,15 +49,6 @@ export default function Sidebar() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  useEffect(() => {
-    if (window.innerWidth < 768) {
-      document.body.style.overflow = isSidebarOpen ? "hidden" : "";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => (document.body.style.overflow = "");
-  }, [isSidebarOpen]);
 
   /* ---------------- DATA ---------------- */
   const technologies = [
@@ -98,13 +87,14 @@ export default function Sidebar() {
       setQuestions(questionsData[selectedTech][levelId]);
     } else {
       setQuestions([]);
-      toast.error("Questions not found for this selection");
+      toast.error("Questions coming soon!");
     }
 
     if (window.innerWidth < 768) setIsSidebarOpen(false);
   };
 
   const handleAnswerSelect = (index) => {
+    if (userAnswers[currentQuestion] !== undefined) return;
     const updatedAnswers = { ...userAnswers, [currentQuestion]: index };
     setUserAnswers(updatedAnswers);
     
@@ -113,27 +103,20 @@ export default function Sidebar() {
     } else {
       let correctCount = 0;
       questions.forEach((q, idx) => {
-        if (updatedAnswers[idx] === q.correctAnswer) {
-          correctCount++;
-        }
+        if (updatedAnswers[idx] === q.correctAnswer) correctCount++;
       });
-      
       const percentage = Math.round((correctCount / questions.length) * 100);
       setScore({ correct: correctCount, total: questions.length, percentage });
       setShowResults(true);
     }
   };
 
-  const toggleSidebar = () => setIsSidebarOpen(prev => !prev);
-
   const currentQ = questions[currentQuestion];
-  
-  const getPerformance = () => {
+  const performance = (() => {
     if (score.percentage >= 80) return { text: "Excellent!", color: "text-green-600 bg-green-50", icon: <Trophy size={48}/> };
     if (score.percentage >= 60) return { text: "Good Job!", color: "text-yellow-600 bg-yellow-50", icon: <Award size={48}/> };
     return { text: "Keep Practicing!", color: "text-red-600 bg-red-50", icon: <Target size={48}/> };
-  };
-  const performance = getPerformance();
+  })();
 
   return (
     <div className={sidebarStyles.pageContainer}>
@@ -154,10 +137,10 @@ export default function Sidebar() {
               <div className={sidebarStyles.logoIcon}><BookOpen size={28} className="text-indigo-700" /></div>
               <div>
                 <span className={sidebarStyles.logoTitle}>Tech Quiz Master</span>
-                <p className={sidebarStyles.logoSubtitle}>Improve your coding skills</p>
+                <p className={sidebarStyles.logoSubtitle}>Improve coding skills</p>
               </div>
             </div>
-            <button onClick={toggleSidebar} className={sidebarStyles.closeButton}><X size={20} /></button>
+            <button onClick={() => setIsSidebarOpen(false)} className={sidebarStyles.closeButton}><X size={20} /></button>
           </div>
 
           <div className={sidebarStyles.sidebarContent}>
@@ -198,71 +181,36 @@ export default function Sidebar() {
               </div>
             ))}
           </div>
+
+          <div className={sidebarStyles.sidebarFooter}>
+            <div className={sidebarStyles.footerContent}>
+              <div className={sidebarStyles.footerContentCenter}>
+                <p>Master your skills one quiz at a time</p>
+                <p className={sidebarStyles.footerHighlight}>Keep learning and keep going</p>
+              </div>
+            </div>
+          </div>
         </aside>
 
+        {/* --- MAIN CONTENT --- */}
         <main className={sidebarStyles.mainContent}>
           <div className={sidebarStyles.mobileHeader}>
-            <button onClick={toggleSidebar} className={sidebarStyles.menuButton}><Menu size={20} /></button>
+            <button onClick={() => setIsSidebarOpen(true)} className={sidebarStyles.menuButton}><Menu size={20} /></button>
             <div className={sidebarStyles.mobileTitle}>
               {selectedTech ? technologies.find(t => t.id === selectedTech).name : "Tech Quiz Master"}
             </div>
           </div>
 
           {!selectedTech ? (
-            /* --- HERO SECTION --- */
-            <div className="flex flex-col items-center justify-center p-6 text-center space-y-8 max-w-4xl mx-auto">
-              <div className="space-y-4">
-                <div className="inline-flex items-center px-4 py-2 rounded-full bg-indigo-50 text-indigo-700 font-medium text-sm mb-4">
-                  <Sparkles size={16} className="mr-2" /> AI Powered Platform
-                </div>
-                <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 tracking-tight">
-                  Master Your Coding Skills with <span className="text-indigo-600">AI Quizzes</span>
-                </h1>
-                <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                  Test your knowledge across 10+ modern technologies. From Basic syntax to Advanced architecture, we help you prepare for interviews and exams.
-                </p>
-              </div>
-
-              {/* INFORMATION CARDS */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mt-8">
-                <div className="p-6 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-                  <div className="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center mb-4 mx-auto">
-                    <BrainCircuit size={24} />
-                  </div>
-                  <h3 className="font-bold text-gray-900 mb-2">Smart Learning</h3>
-                  <p className="text-sm text-gray-500">Curated questions designed to challenge your understanding of core concepts.</p>
-                </div>
-
-                <div className="p-6 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-                  <div className="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center mb-4 mx-auto">
-                    <ZapIcon size={24} />
-                  </div>
-                  <h3 className="font-bold text-gray-900 mb-2">Instant Results</h3>
-                  <p className="text-sm text-gray-500">Get immediate feedback on your answers and a full performance score at the end.</p>
-                </div>
-
-                <div className="p-6 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-shadow">
-                  <div className="w-12 h-12 bg-purple-50 text-purple-600 rounded-xl flex items-center justify-center mb-4 mx-auto">
-                    <MousePointer2 size={24} />
-                  </div>
-                  <h3 className="font-bold text-gray-900 mb-2">Multi-Level</h3>
-                  <p className="text-sm text-gray-500">Choose between Basic, Intermediate, or Advanced tracks to match your expertise.</p>
-                </div>
-              </div>
-
-              <div className="mt-12 animate-bounce flex flex-col items-center text-gray-400">
-                 <p className="text-sm font-medium mb-2">Select a technology from the sidebar to start</p>
-                 <ChevronRight className="rotate-90 md:-rotate-180" />
-              </div>
-            </div>
+            <HeroSection />
           ) : !selectedLevel ? (
-            <div className={sidebarStyles.levelSelectionContainer}>
-              <div className={sidebarStyles.levelSelectionContent}>
-                <h2 className={sidebarStyles.techSelectionTitle}>{technologies.find(t => t.id === selectedTech).name} Quiz</h2>
-                <p>Select a difficulty level to begin your challenge.</p>
-              </div>
+            <div className="flex flex-col items-center justify-center h-full text-center p-10 space-y-4">
+              <div className="p-6 bg-indigo-100 rounded-3xl animate-pulse text-indigo-600"><Star size={48} fill="currentColor"/></div>
+              <h2 className="text-3xl font-black text-gray-800 tracking-tight">Pick Your Difficulty</h2>
+              <p className="text-gray-500 max-w-sm">Please select a level from the sidebar to start the <strong>{selectedTech.toUpperCase()}</strong> assessment.</p>
             </div>
           ) : showResults ? (
+            /* --- RESULTS UI --- */
             <div className={sidebarStyles.resultsContainer}>
               <div className={sidebarStyles.resultsContent}>
                 <div className={sidebarStyles.resultsHeader}>
@@ -290,23 +238,24 @@ export default function Sidebar() {
                       <div className={sidebarStyles.scoreProgressFill} style={{ width: `${score.percentage}%`, backgroundColor: score.percentage >= 60 ? '#10b981' : '#ef4444' }} />
                     </div>
                   </div>
-                  <button onClick={() => setSelectedLevel(null)} className="mt-6 px-6 py-2 bg-indigo-600 text-white rounded-lg">Try Another</button>
+                  <button onClick={() => setSelectedLevel(null)} className="mt-8 bg-indigo-600 text-white px-8 py-3 rounded-2xl font-bold shadow-lg shadow-indigo-100 hover:bg-indigo-700 transition-all">Try Another</button>
                 </div>
               </div>
             </div>
-          ) : currentQ ? (
+          ) : (
+            /* --- QUIZ UI --- */
             <div className={sidebarStyles.quizContainer}>
               <div className={sidebarStyles.quizHeader}>
-                <h1 className={sidebarStyles.quizTitle}>{technologies.find(t => t.id === selectedTech).name} - {selectedLevel}</h1>
+                <h1 className={sidebarStyles.quizTitle}>{selectedTech.toUpperCase()} - {selectedLevel}</h1>
                 <span className={sidebarStyles.quizCounter}>Question {currentQuestion + 1} of {questions.length}</span>
                 <div className={sidebarStyles.progressBar}>
                   <div className={sidebarStyles.progressFill} style={{ width: `${((currentQuestion + 1) / questions.length) * 100}%` }} />
                 </div>
               </div>
               <div className={sidebarStyles.questionContainer}>
-                <h2 className={sidebarStyles.questionText}>{currentQ.question}</h2>
+                <h2 className={sidebarStyles.questionText}>{currentQ?.question}</h2>
                 <div className={sidebarStyles.optionsContainer}>
-                  {currentQ.options.map((option, index) => {
+                  {currentQ?.options.map((option, index) => {
                     const isSelected = userAnswers[currentQuestion] === index;
                     const isCorrect = index === currentQ.correctAnswer;
                     const showFeedback = userAnswers[currentQuestion] !== undefined;
@@ -318,7 +267,7 @@ export default function Sidebar() {
                         className={`${sidebarStyles.optionButton} ${isSelected ? (isCorrect ? sidebarStyles.optionCorrect : sidebarStyles.optionIncorrect) : showFeedback && isCorrect ? sidebarStyles.optionCorrect : sidebarStyles.optionNormal}`}
                       >
                          <div className={sidebarStyles.optionContent}>
-                            {showFeedback && (isCorrect ? <CheckCircle size={20} /> : isSelected ? <XCircle size={20} /> : null)}
+                            {showFeedback && (isCorrect ? <CheckCircle size={20} className="text-green-600" /> : isSelected ? <XCircle size={20} className="text-red-600" /> : null)}
                             <span className={sidebarStyles.optionText}>{option}</span>
                          </div>
                       </button>
@@ -327,8 +276,6 @@ export default function Sidebar() {
                 </div>
               </div>
             </div>
-          ) : (
-            <div className={sidebarStyles.loadingContainer}>Loading questions...</div>
           )}
         </main>
       </div>

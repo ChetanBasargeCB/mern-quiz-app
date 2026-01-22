@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { RiLogoutBoxRLine } from "react-icons/ri";
 import { CiLogout } from "react-icons/ci";
 import { MdOutlineMenu, MdClose } from "react-icons/md";
-import { BsFillBookmarkStarFill } from "react-icons/bs";
 import logo from "../assets/AiLogo.jpeg";
 import { Link, useNavigate } from "react-router-dom";
 import { navbarStyles } from "../assets/dummyStyle";
@@ -12,98 +11,94 @@ export const Navbar = () => {
   const [menuopen, setMenuopen] = useState(false);
   const navigate = useNavigate();
 
-  //  Check auth on load + listen to login/logout
   useEffect(() => {
     const user = localStorage.getItem("user");
     setLoggedIn(!!user);
 
-    const handleAuthChange = (e) => {
-      setLoggedIn(!!e.detail?.user);
-    };
-
+    const handleAuthChange = (e) => setLoggedIn(!!e.detail?.user);
     window.addEventListener("authchanged", handleAuthChange);
     return () => window.removeEventListener("authchanged", handleAuthChange);
   }, []);
 
-  const handellogout = () => {
+  const handleLogout = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("authtoken");
-
-    window.dispatchEvent(
-      new CustomEvent("authchanged", { detail: { user: null } }),
-    );
-
+    window.dispatchEvent(new CustomEvent("authchanged", { detail: { user: null } }));
     setLoggedIn(false);
     navigate("/login");
   };
 
   return (
-    <nav className="border-b border-gray-200 relative max-md:h-13"  >
-      <div className="flex items-center justify-between px-5 py-3   ">
-       <Link
-  to="/"
-  className=" absolute left-1/2 -translate-x-1/2 flex  items-center"
->
-  <img
-    src={logo}
-    alt="logo"
-    className={navbarStyles.logo}
-  />
-</Link>
+    <nav className="border-b border-gray-200 bg-white relative z-50 shadow-sm h-20 flex items-center">
+      <div className="flex items-center justify-between px-5 py-3 max-w-7xl mx-auto w-full relative">
+        
+        {/* Left Side: App Name */}
+        <h1 className="text-2xl font-black text-indigo-600 hidden lg:block tracking-tighter italic">
+          QuizMaster AI
+        </h1>
 
+        {/* Center: Enhanced Logo */}
+        <Link 
+          to="/" 
+          className="absolute left-1/2 -translate-x-1/2 flex items-center group"
+        >
+          <div className="relative p-1 rounded-full bg-gradient-to-tr from-indigo-600 via-purple-500 to-pink-500 shadow-lg group-hover:shadow-indigo-200 transition-all duration-300 group-hover:scale-110">
+            <div className="bg-white rounded-full p-0.5">
+               <img 
+                src={logo} 
+                alt="logo" 
+                className="h-12 w-12 md:h-16 md:w-16 rounded-full object-cover" 
+              />
+            </div>
+            <div className="absolute inset-0 rounded-full bg-indigo-500 animate-ping opacity-0 group-hover:opacity-20 transition-opacity"></div>
+          </div>
+        </Link>
 
-        <h1 className={navbarStyles.textlogo}>Quiz Application</h1>
-
-        {/* Desktop */}
-        <div className="hidden md:flex gap-4">
-          <button className="w-28 h-10 flex items-center justify-center gap-2 bg-green-400 text-white rounded-sm hover:bg-green-500">
-            My Result <BsFillBookmarkStarFill />
-          </button>
-
+        {/* Right Side: Desktop Auth Buttons */}
+        <div className="hidden md:flex items-center">
           {loggedIn ? (
-            <button
-              onClick={handellogout}
-              className="w-28 h-10 flex items-center justify-center gap-2 bg-red-400 text-white rounded-sm hover:bg-red-500"
+            <button 
+              onClick={handleLogout} 
+              className="flex items-center gap-2 bg-red-500 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-red-600 transition-all shadow-sm active:scale-95"
             >
-              Logout <RiLogoutBoxRLine className="text-xl" />
+              Logout <RiLogoutBoxRLine />
             </button>
           ) : (
-            <Link to="/login">
-              <button className="w-28 h-10 flex items-center justify-center gap-2 bg-red-400 text-white rounded-sm hover:bg-red-500">
-                Login <CiLogout className="text-xl" />
-              </button>
+            <Link 
+              to="/login" 
+              className="flex items-center gap-2 bg-indigo-600 text-white px-8 py-2.5 rounded-xl font-bold hover:bg-indigo-700 transition-all shadow-md active:scale-95 shadow-indigo-100"
+            >
+              Login <CiLogout className="stroke-[3px]" />
             </Link>
           )}
         </div>
 
-        {/* Mobile menu button */}
-        <button
-          className="md:hidden text-3xl absolute right-0  top-1"
+        {/* Mobile Menu Trigger */}
+        <button 
+          className="md:hidden text-3xl text-gray-600 p-2 focus:outline-none absolute right-4" 
           onClick={() => setMenuopen(!menuopen)}
         >
           {menuopen ? <MdClose /> : <MdOutlineMenu />}
         </button>
       </div>
 
-      {/* Mobile menu */}
+      {/* Mobile Menu Dropdown */}
       {menuopen && (
-        <div className="md:hidden absolute top-15 w-full  flex flex-col gap-3 px-5 pb-4">
-          <button className="w-full h-10 flex items-center justify-center gap-2 bg-green-400 text-white rounded-lg">
-            My Result <BsFillBookmarkStarFill />
-          </button>
-
+        <div className="md:hidden absolute top-full left-0 w-full bg-white border-b shadow-xl p-6 space-y-4 flex flex-col items-center animate-in slide-in-from-top duration-300 z-40">
           {loggedIn ? (
-            <button
-              onClick={handellogout}
-              className="w-full h-10 flex items-center justify-center gap-2 bg-red-400 text-white rounded-lg"
+            <button 
+              onClick={() => { handleLogout(); setMenuopen(false); }} 
+              className="w-full bg-red-500 text-white py-3 rounded-xl font-bold text-center"
             >
-              Logout <RiLogoutBoxRLine />
+              Logout
             </button>
           ) : (
-            <Link to="/login">
-              <button className="w-full h-10 flex items-center justify-center gap-2 bg-red-400 text-white rounded-sm">
-                Login <CiLogout />
-              </button>
+            <Link 
+              to="/login" 
+              className="w-full bg-blue-600 text-white py-3 rounded-xl font-bold text-center" 
+              onClick={() => setMenuopen(false)}
+            >
+              Login
             </Link>
           )}
         </div>
