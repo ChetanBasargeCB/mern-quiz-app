@@ -25,6 +25,7 @@ import {
 import toast from "react-hot-toast";
 import questionsData from '../assets/dummyData';
 import HeroSection from "./HeroSection";
+import { useNavigate } from "react-router-dom";
 
 export default function Sidebar() {
   const [selectedTech, setSelectedTech] = useState(null);
@@ -39,6 +40,10 @@ export default function Sidebar() {
   const [score, setScore] = useState({ correct: 0, total: 0, percentage: 0 });
 
   const asideRef = useRef(null);
+
+  //! if user is not login 
+  const navigate = useNavigate()
+
 
   /* ---------------- RESPONSIVE ---------------- */
   useEffect(() => {
@@ -76,8 +81,19 @@ export default function Sidebar() {
     setSelectedLevel(null);
     setShowResults(false);
   };
-
+  
   const handleLevelSelect = (levelId) => {
+    //! STEP 1: Check if user is logged in
+  const user = localStorage.getItem("user");
+  const token = localStorage.getItem("authtoken");
+
+  if (!user || !token) {
+    // STEP 2: If not logged in, show a warning and redirect
+    toast.error("Please login to start the quiz!");
+    navigate("/login");
+    return; // Stop the function here
+  }
+  //! user login then 
     setSelectedLevel(levelId);
     setCurrentQuestion(0);
     setUserAnswers({});
