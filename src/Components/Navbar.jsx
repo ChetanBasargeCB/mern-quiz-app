@@ -42,7 +42,7 @@ export const Navbar = () => {
           to="/" 
           className="absolute left-1/2 -translate-x-1/2 flex items-center group"
         >
-          <div className="relative p-1 rounded-full bg-gradient-to-tr from-indigo-600 via-purple-500 to-pink-500 shadow-lg group-hover:shadow-indigo-200 transition-all duration-300 group-hover:scale-110">
+          <div className="relative p-1 rounded-full bg-linear-to-tr from-indigo-600 via-purple-500 to-pink-500 shadow-lg group-hover:shadow-indigo-200 transition-all duration-300 group-hover:scale-110">
             <div className="bg-white rounded-full p-0.5">
                <img 
                 src={logo} 
